@@ -1,4 +1,6 @@
 <?php
+
+echo "#!/bin/bash"."\n";
 // fix for crontab
 //set_include_path("/tmp/Onapp-bandwidth-stats-to-grafana/");
 
@@ -24,25 +26,26 @@ if (file_exists($privateConf)) {
 
 
 
-//Include settings
-for ($year = 2014; $year <= 2018; $year++) {
-
-	for ($month = 1; $month <= 12; $month++) {
-
-	for ($day = 1; $day <= 31; $day++) {
-
-	for ($hour = 1; $hour <= 24; $hour++) {
 
 
+date_default_timezone_set('UTC');
 
 
-  $dateStringStart = $year."-".fixdate($month)."-".fixdate($day)."+".fixdate($hour-1).":00:00";
-	$dateStringEnd = $year."-".fixdate($month)."-".fixdate($day)."+".fixdate($hour).":00:00";
-	//echo $dateStringStart."\n";
-	//echo $dateStringEnd."\n";
+$date = '2014-01-01 00:00:00';
+$end_date = '2018-10-16 00:00:00';
 
+while (strtotime($date) <= strtotime($end_date)) {
 
-  $datep = new DateTime($year."-".fixdate($month)."-".fixdate($day)." ".fixdate($hour).":00:00");
+$date_start = date ("Y-m-d H:i:s", strtotime("-1 hour", strtotime($date)));
+
+$date_start = str_replace(' ', '+', $date_start);
+$date_stop =  str_replace(' ', '+', $date);
+
+$dateStringStart = $date_start;
+$dateStringEnd = $date_stop;
+
+$datep = new DateTime($date);
+echo "# ".$date_start."\n";
 
 
 
@@ -83,11 +86,12 @@ create_CVS($userdata); // create cvs
 $userdata=0;
 $raw_data=0;
 
+$date = date ("Y-m-d H:i:s", strtotime("+1 hour", strtotime($date)));
 
 }
-}
-}
-}
+
+
+
 
 function traverse(&$objOrArray)
 {
